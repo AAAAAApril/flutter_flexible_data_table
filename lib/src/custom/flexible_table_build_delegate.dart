@@ -6,22 +6,27 @@ import 'package:flutter_flexible_data_table/src/flexible_table_controller.dart';
 
 class FlexibleTableBuildDelegate<T, C extends FlexibleTableControllerMixin<T>>
     extends AbsFlexibleTableBuildDelegate<T, C> {
+  FlexibleTableBuildDelegate(
+    super.tableController,
+  );
 
-  FlexibleTableBuildDelegate(super.tableController);
-
-  @override
-  // TODO: implement tableColumns
-  Set<AbsFlexibleTableColumn<T>> get tableColumns => throw UnimplementedError();
-
-  @override
-  Widget buildTableHeaderRow(FlexibleTableBuildArguments<T> arguments) {
-    // TODO: implement buildTableHeaderRow
-    throw UnimplementedError();
-  }
+  final Set<AbsFlexibleTableColumn<T>> _startPinnedColumns;
+  final Set<AbsFlexibleTableColumn<T>> _centerScrollableColumns;
+  final Set<AbsFlexibleTableColumn<T>> _endPinnedColumns;
 
   @override
-  Widget buildTableInfoRow(FlexibleTableInfoRowBuildArguments<T> arguments) {
-    // TODO: implement buildTableInfoRow
+  late final List<AbsFlexibleTableColumn<T>> tableColumns = [
+    ..._startPinnedColumns,
+    ..._centerScrollableColumns,
+    ..._endPinnedColumns,
+  ];
+
+  @override
+  Widget buildTableRow(
+    FlexibleTableBuildArguments<T> arguments,
+    Widget Function(AbsFlexibleTableColumn<T> column) buildCell,
+  ) {
+    // TODO: implement buildTableRow
     throw UnimplementedError();
   }
 }
