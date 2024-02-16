@@ -1,7 +1,7 @@
 name: flutter_flexible_data_table
 description: "A package for build flutter data table."
 version: 0.0.1
-homepage:
+homepage: 'https://github.com/AAAAAApril/flutter_flexible_data_table'
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
