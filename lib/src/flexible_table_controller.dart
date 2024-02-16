@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/widgets.dart';
@@ -84,9 +85,11 @@ abstract class AbsFlexibleTableController<T> extends ChangeNotifier with Flexibl
   AbsFlexibleTableColumn<T>? _currentSortColumn;
 
   bool _disposed = false;
+  Timer? _notifyDelay;
 
   @override
   void dispose() {
+    _notifyDelay?.cancel();
     _disposed = true;
     super.dispose();
   }
@@ -144,10 +147,13 @@ abstract class AbsFlexibleTableController<T> extends ChangeNotifier with Flexibl
 
   @protected
   void sortAndNotifyListeners() {
-    final List<T> dataListNeedSort = List<T>.of(_rawDataList);
-    sortDataList(dataListNeedSort);
-    _sortedDataList = UnmodifiableListView<T>(dataListNeedSort);
-    super.notifyListeners();
+    _notifyDelay?.cancel();
+    _notifyDelay = Timer(Duration.zero, () {
+      final List<T> dataListNeedSort = List<T>.of(_rawDataList);
+      sortDataList(dataListNeedSort);
+      _sortedDataList = UnmodifiableListView<T>(dataListNeedSort);
+      super.notifyListeners();
+    });
   }
 
   @override
