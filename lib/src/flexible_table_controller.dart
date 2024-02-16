@@ -3,7 +3,8 @@ import 'dart:collection';
 
 import 'package:flutter/widgets.dart';
 
-import 'flexible_table_build_arguments.dart';
+import 'custom/flexible_table_value_mixin.dart';
+import 'flexible_table_build_delegate.dart';
 import 'flexible_table_column.dart';
 import 'flexible_table_sort_type.dart';
 
@@ -23,8 +24,8 @@ mixin FlexibleTableControllerMixin<T> on ChangeNotifier {
   /// current sorting table column
   AbsFlexibleTableColumn<T>? get sortingColumn;
 
-  /// all table columns
-  Set<AbsFlexibleTableColumn<T>> get tableColumns;
+  /// table widget build delegate
+  FlexibleTableBuildDelegateMixin<T, FlexibleTableControllerMixin<T>> get tableBuildDelegate;
 
   /// notify raw table data list
   void setRawData(List<T> rawData);
@@ -36,7 +37,7 @@ mixin FlexibleTableControllerMixin<T> on ChangeNotifier {
   void setSortingType(FlexibleTableSortType newType);
 
   /// notify table sorting column
-  void setSortingColumn(AbsFlexibleTableColumn<T>? newColumn);
+  void setSortingColumn(Object? columnId);
 
   /// sort data list by [sortingType] and [sortingColumn]
   void sortDataList(List<T> source) {
@@ -52,21 +53,6 @@ mixin FlexibleTableControllerMixin<T> on ChangeNotifier {
     });
   }
 
-  /// find table column by [AbsFlexibleTableColumn.id]
-  AbsFlexibleTableColumn<T>? findTableColumnById(Object columnId) {
-    try {
-      return tableColumns.firstWhere((element) => element.id == columnId);
-    } catch (_) {
-      return null;
-    }
-  }
-
-  /// build table header row widget
-  Widget buildTableHeaderRow(FlexibleTableBuildArguments<T> arguments);
-
-  /// build table info row widget
-  Widget buildTableInfoRow(FlexibleTableInfoRowBuildArguments<T> arguments);
-
   @override
   void notifyListeners() {
     if (isDisposed) {
@@ -76,7 +62,8 @@ mixin FlexibleTableControllerMixin<T> on ChangeNotifier {
   }
 }
 
-abstract class AbsFlexibleTableController<T> extends ChangeNotifier with FlexibleTableControllerMixin<T> {
+abstract class AbsFlexibleTableController<T> extends ChangeNotifier
+    with FlexibleTableControllerMixin<T>, FlexibleTableValueMixin<T> {
   AbsFlexibleTableController();
 
   UnmodifiableListView<T> _rawDataList = UnmodifiableListView<T>(<T>[]);
@@ -86,13 +73,6 @@ abstract class AbsFlexibleTableController<T> extends ChangeNotifier with Flexibl
 
   bool _disposed = false;
   Timer? _notifyDelay;
-
-  @override
-  void dispose() {
-    _notifyDelay?.cancel();
-    _disposed = true;
-    super.dispose();
-  }
 
   @override
   bool get isDisposed => _disposed;
@@ -110,12 +90,9 @@ abstract class AbsFlexibleTableController<T> extends ChangeNotifier with Flexibl
   AbsFlexibleTableColumn<T>? get sortingColumn => _currentSortColumn;
 
   @override
-  Set<AbsFlexibleTableColumn<T>> get tableColumns;
-
-  @override
   void setRawData(List<T> rawData) {
     _rawDataList = UnmodifiableListView<T>(rawData);
-    sortAndNotifyListeners();
+    notifyListenersDelayed();
   }
 
   @override
@@ -133,32 +110,38 @@ abstract class AbsFlexibleTableController<T> extends ChangeNotifier with Flexibl
       return;
     }
     _currentSortType = newType;
-    sortAndNotifyListeners();
+    notifyListenersDelayed();
   }
 
   @override
-  void setSortingColumn(AbsFlexibleTableColumn<T>? newColumn) {
-    if (_currentSortColumn == newColumn) {
+  void setSortingColumn(Object? columnId) {
+    if (_currentSortColumn?.id == columnId) {
       return;
     }
-    _currentSortColumn = newColumn;
-    sortAndNotifyListeners();
+    _currentSortColumn = columnId == null ? null : tableBuildDelegate.findTableColumnById(columnId);
+    notifyListenersDelayed();
   }
 
   @protected
-  void sortAndNotifyListeners() {
+  void setSortedData(List<T> sortedData) {
+    _sortedDataList = UnmodifiableListView<T>(sortedData);
+    super.notifyListeners();
+  }
+
+  @protected
+  void notifyListenersDelayed() {
     _notifyDelay?.cancel();
     _notifyDelay = Timer(Duration.zero, () {
       final List<T> dataListNeedSort = List<T>.of(_rawDataList);
       sortDataList(dataListNeedSort);
-      _sortedDataList = UnmodifiableListView<T>(dataListNeedSort);
-      super.notifyListeners();
+      setSortedData(dataListNeedSort);
     });
   }
 
   @override
-  Widget buildTableHeaderRow(FlexibleTableBuildArguments<T> arguments);
-
-  @override
-  Widget buildTableInfoRow(FlexibleTableInfoRowBuildArguments<T> arguments);
+  void dispose() {
+    _notifyDelay?.cancel();
+    _disposed = true;
+    super.dispose();
+  }
 }

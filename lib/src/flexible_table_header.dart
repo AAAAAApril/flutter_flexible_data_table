@@ -16,7 +16,7 @@ class FlexibleTableHeader<T, C extends FlexibleTableControllerMixin<T>> extends 
 
   Widget buildRow(C tableController) {
     return LazyLayoutBuilder(
-      builder: (context, viewportWidth) => tableController.buildTableHeaderRow(
+      builder: (context, viewportWidth) => tableController.tableBuildDelegate.buildTableHeaderRow(
         FlexibleTableBuildArguments<T>(
           tableController: tableController,
           viewportWidth: viewportWidth,
