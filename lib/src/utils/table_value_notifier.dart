@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_flexible_data_table/src/flexible_table_controller.dart';
 
-class FlexibleTableValueNotifier<T extends FlexibleTableControllerMixin, D> extends ValueNotifier<D> {
-  FlexibleTableValueNotifier(
+class TableValueNotifier<T extends FlexibleTableControllerMixin, D> extends ValueNotifier<D> {
+  TableValueNotifier(
     this.tableController, {
     required this.selector,
   }) : super(selector.call(tableController)) {
@@ -29,8 +29,8 @@ class FlexibleTableValueNotifier<T extends FlexibleTableControllerMixin, D> exte
   }
 }
 
-class FlexibleTableValueNotifier2<T extends FlexibleTableControllerMixin, A, B> extends ValueNotifier<(A, B)> {
-  FlexibleTableValueNotifier2(
+class TableValueNotifier2<T extends FlexibleTableControllerMixin, A, B> extends ValueNotifier<(A, B)> {
+  TableValueNotifier2(
     this.tableController, {
     required this.selector,
   }) : super(selector.call(tableController)) {
@@ -63,8 +63,8 @@ class FlexibleTableValueNotifier2<T extends FlexibleTableControllerMixin, A, B> 
   }
 }
 
-class FlexibleTableValueNotifier3<T extends FlexibleTableControllerMixin, A, B, C> extends ValueNotifier<(A, B, C)> {
-  FlexibleTableValueNotifier3(
+class TableValueNotifier3<T extends FlexibleTableControllerMixin, A, B, C> extends ValueNotifier<(A, B, C)> {
+  TableValueNotifier3(
     this.tableController, {
     required this.selector,
   }) : super(selector.call(tableController)) {
