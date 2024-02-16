@@ -8,7 +8,7 @@ mixin FlexibleTableBuildDelegateMixin<T, C extends FlexibleTableControllerMixin<
   C get tableController;
 
   /// all table columns
-  Set<AbsFlexibleTableColumn<T>> get tableColumns;
+  List<AbsFlexibleTableColumn<T>> get tableColumns;
 
   /// find table column by [AbsFlexibleTableColumn.id]
   AbsFlexibleTableColumn<T>? findTableColumnById(Object columnId) {
@@ -32,4 +32,20 @@ abstract class AbsFlexibleTableBuildDelegate<T, C extends FlexibleTableControlle
 
   @override
   final C tableController;
+
+  @override
+  Widget buildTableHeaderRow(FlexibleTableBuildArguments<T> arguments) {
+    return buildTableRow(arguments, (column) => column.buildHeaderCell(arguments));
+  }
+
+  @override
+  Widget buildTableInfoRow(FlexibleTableInfoRowBuildArguments<T> arguments) {
+    return buildTableRow(arguments, (column) => column.buildInfoCell(arguments));
+  }
+
+  @protected
+  Widget buildTableRow(
+    FlexibleTableBuildArguments<T> arguments,
+    Widget Function(AbsFlexibleTableColumn<T> column) buildCell,
+  );
 }
