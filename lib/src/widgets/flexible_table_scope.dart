@@ -3,6 +3,16 @@ import 'package:flutter_flexible_data_table/src/flexible_table_controller.dart';
 
 class FlexibleTableScope<T extends FlexibleTableControllerMixin> extends InheritedNotifier<T> {
   static T of<T extends FlexibleTableControllerMixin>(BuildContext context) {
+    return depend<T>(context);
+  }
+
+  static T get<T extends FlexibleTableControllerMixin>(BuildContext context) {
+    final notifier = context.getInheritedWidgetOfExactType<FlexibleTableScope<T>>();
+    assert(notifier != null, 'No ${T.runtimeType} found in context.');
+    return notifier!.notifier!;
+  }
+
+  static T depend<T extends FlexibleTableControllerMixin>(BuildContext context) {
     final notifier = context.dependOnInheritedWidgetOfExactType<FlexibleTableScope<T>>();
     assert(notifier != null, 'No ${T.runtimeType} found in context.');
     return notifier!.notifier!;
