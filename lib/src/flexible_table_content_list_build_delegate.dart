@@ -2,17 +2,39 @@ import 'package:flutter/widgets.dart';
 
 import 'flexible_table_build_arguments.dart';
 
-class FlexibleTableContentListBuildDelegate<T> {
-  const FlexibleTableContentListBuildDelegate();
+abstract class AbsFlexibleTableContentListBuildDelegate<T> {
+  const AbsFlexibleTableContentListBuildDelegate();
 
   /// whether table content list has header item
-  bool get hasListHeader => false;
+  bool get hasListHeader;
 
   /// whether table content list has footer item
-  bool get hasListFooter => false;
+  bool get hasListFooter;
 
   /// whether should show placeholder widget when table data list is empty
-  bool get hasListPlaceholder => false;
+  bool get hasListPlaceholder;
+
+  /// build table content list header item
+  Widget buildListHeaderWidget();
+
+  /// build table content list footer item
+  Widget buildListFooterWidget();
+
+  /// build placeholder widget when table data list is empty
+  Widget buildListPlaceholderWidget();
+
+  /// build table data list item widget
+  Widget buildListDataItemWidget(FlexibleTableBuildArguments<T> buildArguments, int itemIndex) {
+    return buildArguments.tableController.tableBuildDelegate.buildTableInfoRow(
+      FlexibleTableInfoRowBuildArguments<T>(
+        tableController: buildArguments.tableController,
+        viewportWidth: buildArguments.viewportWidth,
+        dataIndex: getDataIndex(itemIndex),
+        itemIndex: itemIndex,
+        itemCount: getItemCount(buildArguments),
+      ),
+    );
+  }
 
   /// table content list total item count
   int getItemCount(FlexibleTableBuildArguments<T> buildArguments) {
@@ -49,22 +71,26 @@ class FlexibleTableContentListBuildDelegate<T> {
     }
     return buildListDataItemWidget(buildArguments, itemIndex);
   }
+}
 
-  Widget buildListDataItemWidget(FlexibleTableBuildArguments<T> buildArguments, int itemIndex) {
-    return buildArguments.tableController.tableBuildDelegate.buildTableInfoRow(
-      FlexibleTableInfoRowBuildArguments<T>(
-        tableController: buildArguments.tableController,
-        viewportWidth: buildArguments.viewportWidth,
-        dataIndex: getDataIndex(itemIndex),
-        itemIndex: itemIndex,
-        itemCount: getItemCount(buildArguments),
-      ),
-    );
-  }
+class FlexibleTableContentListBuildDelegate<T> extends AbsFlexibleTableContentListBuildDelegate<T> {
+  const FlexibleTableContentListBuildDelegate();
 
+  @override
+  bool get hasListFooter => false;
+
+  @override
+  bool get hasListHeader => false;
+
+  @override
+  bool get hasListPlaceholder => false;
+
+  @override
   Widget buildListHeaderWidget() => const SizedBox.shrink();
 
+  @override
   Widget buildListFooterWidget() => const SizedBox.shrink();
 
+  @override
   Widget buildListPlaceholderWidget() => const SizedBox.shrink();
 }

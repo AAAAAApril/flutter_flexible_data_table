@@ -11,7 +11,7 @@ class FlexibleTableContent<T, C extends FlexibleTableControllerMixin<T>> extends
   });
 
   final C? tableController;
-  final FlexibleTableContentListBuildDelegate<T>? listBuildDelegate;
+  final AbsFlexibleTableContentListBuildDelegate<T>? listBuildDelegate;
 
   @override
   Widget build(BuildContext context) {
