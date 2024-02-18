@@ -4,7 +4,7 @@ import 'dart:collection';
 import 'package:flutter/widgets.dart';
 
 import 'custom/flexible_table_value_mixin.dart';
-import 'flexible_table_build_delegate.dart';
+import 'table_row_build_delegate.dart';
 import 'flexible_table_column.dart';
 import 'flexible_table_sort_type.dart';
 
@@ -25,7 +25,7 @@ mixin FlexibleTableControllerMixin<T> on ChangeNotifier {
   AbsFlexibleTableColumn<T>? get sortingColumn;
 
   /// table widget build delegate
-  FlexibleTableBuildDelegateMixin<T, FlexibleTableControllerMixin<T>> get tableBuildDelegate;
+  TableRowBuildDelegateMixin<T, FlexibleTableControllerMixin<T>> get rowBuildDelegate;
 
   /// notify raw table data list
   void setRawData(List<T> rawData);
@@ -118,7 +118,7 @@ abstract class AbsFlexibleTableController<T> extends ChangeNotifier
     if (_currentSortColumn?.id == columnId) {
       return;
     }
-    _currentSortColumn = columnId == null ? null : tableBuildDelegate.findTableColumnById(columnId);
+    _currentSortColumn = columnId == null ? null : rowBuildDelegate.findTableColumnById(columnId);
     notifyListenersDelayed();
   }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import 'flexible_table_content_list_build_delegate.dart';
+import 'table_list_build_delegate.dart';
 import 'flexible_table_controller.dart';
 
 class FlexibleTableContent<T, C extends FlexibleTableControllerMixin<T>> extends StatelessWidget {
@@ -11,7 +11,7 @@ class FlexibleTableContent<T, C extends FlexibleTableControllerMixin<T>> extends
   });
 
   final C? tableController;
-  final AbsFlexibleTableContentListBuildDelegate<T>? listBuildDelegate;
+  final AbsTableListBuildDelegate<T>? listBuildDelegate;
 
   @override
   Widget build(BuildContext context) {

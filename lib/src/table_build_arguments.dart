@@ -1,7 +1,7 @@
 import 'package:flutter_flexible_data_table/src/flexible_table_controller.dart';
 
-class FlexibleTableBuildArguments<T> {
-  const FlexibleTableBuildArguments({
+class TableBuildArguments<T> {
+  const TableBuildArguments({
     required this.tableController,
     required this.viewportWidth,
   });
@@ -14,7 +14,7 @@ class FlexibleTableBuildArguments<T> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is FlexibleTableBuildArguments<T> &&
+      other is TableBuildArguments<T> &&
           runtimeType == other.runtimeType &&
           tableController == other.tableController &&
           viewportWidth == other.viewportWidth;
@@ -23,8 +23,8 @@ class FlexibleTableBuildArguments<T> {
   int get hashCode => tableController.hashCode ^ viewportWidth.hashCode;
 }
 
-class FlexibleTableInfoRowBuildArguments<T> extends FlexibleTableBuildArguments<T> {
-  const FlexibleTableInfoRowBuildArguments({
+class TableRowBuildArguments<T> extends TableBuildArguments<T> {
+  const TableRowBuildArguments({
     required super.tableController,
     required super.viewportWidth,
     required this.dataIndex,
@@ -46,7 +46,7 @@ class FlexibleTableInfoRowBuildArguments<T> extends FlexibleTableBuildArguments<
   bool operator ==(Object other) =>
       identical(this, other) ||
       super == other &&
-          other is FlexibleTableInfoRowBuildArguments<T> &&
+          other is TableRowBuildArguments<T> &&
           runtimeType == other.runtimeType &&
           dataIndex == other.dataIndex &&
           itemIndex == other.itemIndex &&

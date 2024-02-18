@@ -1,12 +1,11 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_flexible_data_table/src/flexible_table_build_arguments.dart';
-import 'package:flutter_flexible_data_table/src/flexible_table_build_delegate.dart';
+import 'package:flutter_flexible_data_table/src/table_row_build_delegate.dart';
 import 'package:flutter_flexible_data_table/src/flexible_table_column.dart';
 import 'package:flutter_flexible_data_table/src/flexible_table_controller.dart';
+import 'package:flutter_flexible_data_table/src/table_build_arguments.dart';
 
-class FlexibleTableBuildDelegate<T, C extends FlexibleTableControllerMixin<T>>
-    extends AbsFlexibleTableBuildDelegate<T, C> {
-  FlexibleTableBuildDelegate(
+class TableRowBuildDelegate<T, C extends FlexibleTableControllerMixin<T>> extends AbsTableRowBuildDelegate<T, C> {
+  TableRowBuildDelegate(
     super.tableController, {
     Set<AbsFlexibleTableColumn<T>>? startColumns,
     Set<AbsFlexibleTableColumn<T>>? scrollableColumns,
@@ -28,7 +27,7 @@ class FlexibleTableBuildDelegate<T, C extends FlexibleTableControllerMixin<T>>
 
   @override
   Widget buildTableRow(
-    FlexibleTableBuildArguments<T> arguments,
+    TableBuildArguments<T> arguments,
     Widget Function(AbsFlexibleTableColumn<T> column) buildCell,
   ) {
     // TODO: implement buildTableRow

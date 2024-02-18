@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_flexible_data_table/src/flexible_table_build_arguments.dart';
 import 'package:flutter_flexible_data_table/src/flexible_table_controller.dart';
 import 'package:flutter_flexible_data_table/src/widgets/flexible_table_scope.dart';
 
+import 'table_build_arguments.dart';
 import 'widgets/lazy_layout_builder.dart';
 
 /// table header row widget
@@ -16,8 +16,8 @@ class FlexibleTableHeader<T, C extends FlexibleTableControllerMixin<T>> extends 
 
   Widget buildRow(C tableController) {
     return LazyLayoutBuilder(
-      builder: (context, viewportWidth) => tableController.tableBuildDelegate.buildTableHeaderRow(
-        FlexibleTableBuildArguments<T>(
+      builder: (context, viewportWidth) => tableController.rowBuildDelegate.buildTableHeaderRow(
+        TableBuildArguments<T>(
           tableController: tableController,
           viewportWidth: viewportWidth,
         ),

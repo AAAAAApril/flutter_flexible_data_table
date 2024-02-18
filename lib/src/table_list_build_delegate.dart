@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 
-import 'flexible_table_build_arguments.dart';
+import 'table_build_arguments.dart';
 
-abstract class AbsFlexibleTableContentListBuildDelegate<T> {
-  const AbsFlexibleTableContentListBuildDelegate();
+abstract class AbsTableListBuildDelegate<T> {
+  const AbsTableListBuildDelegate();
 
   /// whether table content list has header item
   bool get hasListHeader;
@@ -24,9 +24,9 @@ abstract class AbsFlexibleTableContentListBuildDelegate<T> {
   Widget buildListPlaceholderWidget();
 
   /// build table data list item widget
-  Widget buildListDataItemWidget(FlexibleTableBuildArguments<T> buildArguments, int itemIndex) {
-    return buildArguments.tableController.tableBuildDelegate.buildTableInfoRow(
-      FlexibleTableInfoRowBuildArguments<T>(
+  Widget buildListDataItemWidget(TableBuildArguments<T> buildArguments, int itemIndex) {
+    return buildArguments.tableController.rowBuildDelegate.buildTableInfoRow(
+      TableRowBuildArguments<T>(
         tableController: buildArguments.tableController,
         viewportWidth: buildArguments.viewportWidth,
         dataIndex: getDataIndex(itemIndex),
@@ -37,7 +37,7 @@ abstract class AbsFlexibleTableContentListBuildDelegate<T> {
   }
 
   /// table content list total item count
-  int getItemCount(FlexibleTableBuildArguments<T> buildArguments) {
+  int getItemCount(TableBuildArguments<T> buildArguments) {
     if (buildArguments.tableController.sortedData.isEmpty) {
       return hasListPlaceholder ? 1 : 0;
     }
@@ -45,12 +45,12 @@ abstract class AbsFlexibleTableContentListBuildDelegate<T> {
   }
 
   /// whether [itemIndex] is header index
-  bool isHeaderIndex(FlexibleTableBuildArguments<T> buildArguments, int itemIndex) {
+  bool isHeaderIndex(TableBuildArguments<T> buildArguments, int itemIndex) {
     return itemIndex == 0 && hasListHeader;
   }
 
   /// whether [itemIndex] is footer index
-  bool isFooterIndex(FlexibleTableBuildArguments<T> buildArguments, int itemIndex) {
+  bool isFooterIndex(TableBuildArguments<T> buildArguments, int itemIndex) {
     return itemIndex == buildArguments.tableController.sortedData.length + (hasListHeader ? 1 : 0);
   }
 
@@ -58,8 +58,7 @@ abstract class AbsFlexibleTableContentListBuildDelegate<T> {
   int getDataIndex(int itemIndex) => itemIndex - (hasListHeader ? 1 : 0);
 
   /// build table content list item widget
-  Widget buildListItemWidget(BuildContext context, FlexibleTableBuildArguments<T> buildArguments, int itemIndex) {
-    //数据是空的，却又需要构建列表项，说明是需要绘制占位组件
+  Widget buildListItemWidget(BuildContext context, TableBuildArguments<T> buildArguments, int itemIndex) {
     if (buildArguments.tableController.sortedData.isEmpty && hasListPlaceholder) {
       return buildListPlaceholderWidget();
     }
@@ -73,8 +72,8 @@ abstract class AbsFlexibleTableContentListBuildDelegate<T> {
   }
 }
 
-class FlexibleTableContentListBuildDelegate<T> extends AbsFlexibleTableContentListBuildDelegate<T> {
-  const FlexibleTableContentListBuildDelegate();
+class TableListBuildDelegate<T> extends AbsTableListBuildDelegate<T> {
+  const TableListBuildDelegate();
 
   @override
   bool get hasListFooter => false;

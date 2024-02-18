@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import 'flexible_table_build_arguments.dart';
+import 'table_build_arguments.dart';
 import 'flexible_table_controller.dart';
 
 abstract class AbsFlexibleTableColumn<T> {
@@ -10,10 +10,10 @@ abstract class AbsFlexibleTableColumn<T> {
   final Object id;
 
   /// header widget of current table column
-  Widget buildHeaderCell(FlexibleTableBuildArguments<T> arguments);
+  Widget buildHeaderCell(TableBuildArguments<T> arguments);
 
   /// table data info widget of current table column
-  Widget buildInfoCell(FlexibleTableInfoRowBuildArguments<T> arguments);
+  Widget buildInfoCell(TableRowBuildArguments<T> arguments);
 
   /// called when sort by current table column
   int compare(FlexibleTableControllerMixin<T> tableController, T a, T b) => 0;
@@ -25,11 +25,4 @@ abstract class AbsFlexibleTableColumn<T> {
 
   @override
   int get hashCode => id.hashCode;
-}
-
-abstract class AbsFlexibleTableSortableColumn<T> extends AbsFlexibleTableColumn<T> {
-  const AbsFlexibleTableSortableColumn(super.id);
-
-  @override
-  int compare(FlexibleTableControllerMixin<T> tableController, T a, T b);
 }
