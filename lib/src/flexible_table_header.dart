@@ -14,17 +14,6 @@ class FlexibleTableHeader<T, C extends FlexibleTableControllerMixin<T>> extends 
 
   final C? tableController;
 
-  Widget buildRow(C tableController) {
-    return LazyLayoutBuilder(
-      builder: (context, viewportWidth) => tableController.rowBuildDelegate.buildTableHeaderRow(
-        TableBuildArguments<T>(
-          tableController: tableController,
-          viewportWidth: viewportWidth,
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     if (tableController != null) {
@@ -34,5 +23,16 @@ class FlexibleTableHeader<T, C extends FlexibleTableControllerMixin<T>> extends 
       );
     }
     return buildRow(FlexibleTableScope.get<C>(context));
+  }
+
+  Widget buildRow(C tableController) {
+    return LazyLayoutBuilder(
+      builder: (context, viewportWidth) => tableController.rowBuildDelegate.buildTableHeaderRow(
+        TableBuildArguments<T>(
+          tableController: tableController,
+          viewportWidth: viewportWidth,
+        ),
+      ),
+    );
   }
 }
