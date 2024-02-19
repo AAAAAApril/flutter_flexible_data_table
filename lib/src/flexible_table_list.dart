@@ -54,7 +54,32 @@ class FlexibleTableSliverList<T, C extends FlexibleTableControllerMixin<T>> exte
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return const Placeholder();
+    if (tableController != null) {
+      return FlexibleTableScope<C>(
+        notifier: tableController!,
+        child: buildContent(tableController!),
+      );
+    }
+    return buildContent(FlexibleTableScope.get<C>(context));
+  }
+
+  Widget buildContent(C tableController) {
+    final AbsTableListBuildDelegate<T> buildDelegate = listBuildDelegate ?? TableListBuildDelegate<T>();
+    return LazySliverLayoutBuilder(builder: (context, viewportWidth) {
+      final TableBuildArguments<T> arguments = TableBuildArguments<T>(
+        tableController: tableController,
+        viewportWidth: viewportWidth,
+      );
+      return TableValueSelector<C, List<T>>(
+        tableController: tableController,
+        selector: (tableController) => tableController.sortedData,
+        builder: (context, value, child) => SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) => buildDelegate.buildListItemWidget(context, arguments, index),
+            childCount: buildDelegate.getItemCount(arguments),
+          ),
+        ),
+      );
+    });
   }
 }
