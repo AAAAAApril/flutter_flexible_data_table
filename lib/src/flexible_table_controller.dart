@@ -12,32 +12,32 @@ mixin FlexibleTableControllerMixin<T> on ChangeNotifier {
   /// whether table is disposed
   bool get isDisposed;
 
+  /// notify raw table data list
+  set rawData(List<T> rawData);
+
   /// table data list
   UnmodifiableListView<T> get rawData;
 
   /// sorted table data list
   UnmodifiableListView<T> get sortedData;
 
+  /// notify table sort type
+  set sortingType(FlexibleTableSortType newType);
+
   /// current sort type
   FlexibleTableSortType get sortingType;
+
+  /// return next sort type of [sortingType]
+  FlexibleTableSortType get nextSortType;
+
+  /// notify table sorting column
+  set sortingColumn(Object? columnId);
 
   /// current sorting table column
   AbsFlexibleTableColumn<T>? get sortingColumn;
 
   /// table widget build delegate
   TableRowBuildDelegateMixin<T, FlexibleTableControllerMixin<T>> get rowBuildDelegate;
-
-  /// notify raw table data list
-  void setRawData(List<T> rawData);
-
-  /// return next sort type of [sortingType]
-  FlexibleTableSortType getNextSortType();
-
-  /// notify table sort type
-  void setSortingType(FlexibleTableSortType newType);
-
-  /// notify table sorting column
-  void setSortingColumn(Object? columnId);
 
   /// sort data list by [sortingType] and [sortingColumn]
   void sortDataList(List<T> source) {
@@ -78,34 +78,19 @@ abstract class AbsFlexibleTableController<T> extends ChangeNotifier
   bool get isDisposed => _disposed;
 
   @override
+  set rawData(List<T> rawData) {
+    _rawDataList = UnmodifiableListView<T>(rawData);
+    notifyListenersDelayed();
+  }
+
+  @override
   UnmodifiableListView<T> get rawData => _rawDataList;
 
   @override
   UnmodifiableListView<T> get sortedData => _sortedDataList;
 
   @override
-  FlexibleTableSortType get sortingType => _currentSortType;
-
-  @override
-  AbsFlexibleTableColumn<T>? get sortingColumn => _currentSortColumn;
-
-  @override
-  void setRawData(List<T> rawData) {
-    _rawDataList = UnmodifiableListView<T>(rawData);
-    notifyListenersDelayed();
-  }
-
-  @override
-  FlexibleTableSortType getNextSortType() {
-    return switch (sortingType) {
-      FlexibleTableSortType.normal => FlexibleTableSortType.descending,
-      FlexibleTableSortType.ascending => FlexibleTableSortType.normal,
-      FlexibleTableSortType.descending => FlexibleTableSortType.ascending,
-    };
-  }
-
-  @override
-  void setSortingType(FlexibleTableSortType newType) {
+  set sortingType(FlexibleTableSortType newType) {
     if (_currentSortType == newType) {
       return;
     }
@@ -114,13 +99,28 @@ abstract class AbsFlexibleTableController<T> extends ChangeNotifier
   }
 
   @override
-  void setSortingColumn(Object? columnId) {
+  FlexibleTableSortType get sortingType => _currentSortType;
+
+  @override
+  FlexibleTableSortType get nextSortType {
+    return switch (sortingType) {
+      FlexibleTableSortType.normal => FlexibleTableSortType.descending,
+      FlexibleTableSortType.ascending => FlexibleTableSortType.normal,
+      FlexibleTableSortType.descending => FlexibleTableSortType.ascending,
+    };
+  }
+
+  @override
+  set sortingColumn(Object? columnId) {
     if (_currentSortColumn?.id == columnId) {
       return;
     }
     _currentSortColumn = columnId == null ? null : rowBuildDelegate.findTableColumnById(columnId);
     notifyListenersDelayed();
   }
+
+  @override
+  AbsFlexibleTableColumn<T>? get sortingColumn => _currentSortColumn;
 
   @protected
   void setSortedData(List<T> sortedData) {
